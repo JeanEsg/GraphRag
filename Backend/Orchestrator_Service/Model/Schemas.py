@@ -24,9 +24,3 @@ class QueryResponse(BaseModel):
 class ErrorResponse(BaseModel):
     error: str
     detail: Optional[str] = None
-
-
-class HealthResponse(BaseModel):
-    status: str
-    service: str
-    environment: str

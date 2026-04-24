@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Optional
 from fastapi import HTTPException, UploadFile, status
-from config import settings
+from Config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +77,3 @@ async def _read_and_validate_size(file: UploadFile) -> bytes:
 def _get_extension(filename: str) -> str:
     _, ext = os.path.splitext(filename)
     return ext.lstrip(".").lower()
-
-
-from typing import Optional

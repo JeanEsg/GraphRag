@@ -1,20 +1,20 @@
 # GraphRAG
 
-Desarrollo de un sistema GraphRAG (Retrieval-Augmented Generation basado en grafos)para asistir consultas sobre modalidades de trabajo de grado en la Universidad Autónoma de Occidente.
+Desarrollo de un sistema GraphRAG para asistir consultas sobre modalidades de trabajo de grado en la Universidad Autónoma de Occidente.
 
 ---
 
 ## Descripción General
 
-Este sistema está basado en una arquitectura de microservicios, donde cada servicio cumple una función específica dentro del pipeline de procesamiento de documentos, generación de embeddings y recuperación de información.
+Este sistema está basado en una arquitectura Monolitica Organizada en subsistemas, donde cada subsistema cumple una función específica dentro del pipeline de procesamiento de documentos, generación de embeddings y recuperación de información.
 
-El objetivo principal es permitir que un usuario consulte información relevante a partir de documentos previamente procesados, utilizando técnicas de IA y búsqueda semántica.
+El objetivo principal es permitir que un usuario consulte información relevante a partir de documentos previamente procesados, utilizando técnicas de IA, búsqueda semántica, recuperación hibrida de Contexto.
 
 ---
 
 ## Arquitectura del Sistema
 
-Actualmente el sistema está compuesto por los siguientes microservicios:
+Actualmente el sistema está compuesto por los siguientes Subsistemas:
 
 ### Orchestrator_Service
 
@@ -23,7 +23,7 @@ Es el **punto de entrada del sistema**.
 **Responsabilidades:**
 
 * Recibir las solicitudes del cliente
-* Orquestar el flujo de comunicación entre microservicios
+* Orquestar el flujo de comunicación entre Modulos
 * Coordinar el procesamiento de documentos y consultas
 
 **Puerto:** `8000`
@@ -39,12 +39,6 @@ Encargado del procesamiento de documentos.
 * Recibir documentos o texto
 * Dividir el contenido en chunks (fragmentos)
 * Enviar los chunks al servicio de embeddings
-
-**Comunicación:**
-
-* Se conecta con `Embedding_Service`
-
-**Puerto:** `8001`
 
 ---
 
@@ -67,7 +61,25 @@ Encargado de la vectorización del contenido.
 
 * Qdrant
 
-**Puerto:** `8002`
+---
+
+### Indexer_Service
+
+Encargado del mapeo de entidades y relaciones inserción de data sobre el grafo y exploración.
+
+**Responsabilidades:**
+
+* Mapear Entidades y relaciones sobre los chunks adquiridos
+* Insertar data en el grafo
+* Explorar grafo para enriquecer contexto
+
+**Tecnologías:**
+
+* Spacy para hacer NER
+
+**Base de datos:**
+
+* Neo4j
 
 ---
 
@@ -84,18 +96,32 @@ Responsabilidades:
 
 ---
 
+### Neo4j
+
+Base de datos de grafo utilizada para persistir el grafo de conocimiento.
+
+Responsabilidades:
+
+* Almacenamiento de entidades y relaciones
+
+**Puerto:** `7474`
+
+---
+
 ## Flujo del Sistema de Ingesta del Sistema
 
 1. El usuario envía una solicitud al **Orchestrator**
-2. El Orchestrator envía el documento al **Document Service**
+2. El Orchestrator envía el contenido al **Document Service**
 3. El Document Service:
-
    * Divide el texto en chunks
    * Envía los chunks al **Embedding Service**
+   * Envía los chunks a **Indexer Service**
 4. El Embedding Service:
-
    * Genera embeddings
    * Los almacena en **Qdrant**
+5. El indexer Service:
+   * Aplica NER sobre la data adquirida
+   * Almacena entidades y relaciones en el grafo
 
 ---
 
@@ -110,7 +136,7 @@ Responsabilidades:
 
 ### 2. Levantar los servicios
 
-Ubícate en la carpeta Backend y ejecuta
+Ubícate en la carpeta Raiz del proyecto
 
 ```bash
 docker-compose up -d
@@ -124,9 +150,8 @@ Una vez levantado, tendrás:
 
 | Servicio          | URL                   |
 | ----------------- | --------------------- |
-| Orchestrator      | http://localhost:8000 |
-| Document Service  | http://localhost:8001 |
-| Embedding Service | http://localhost:8002 |
+| Backend           | http://localhost:8000 |
+| Neo4j             | http://localhost:7474 |
 | Qdrant            | http://localhost:6333 |
 
 ---
@@ -150,12 +175,11 @@ http://localhost:6333/dashboard
 ---
 
 
-## 🐳 Docker Compose
+## Docker Compose
 
 El sistema está completamente dockerizado y utiliza una red interna para la comunicación entre servicios.
 
 * Los servicios se comunican usando el **nombre del contenedor**
-* Ejemplo: `http://embedding_service:8002`
 
 ---
 
@@ -167,10 +191,10 @@ Orquestación básica
 Procesamiento de documentos
 Generación de embeddings
 Integración con Qdrant
+Integración con Neo4j
 
 Pendiente:
 
-* Indexer Service
 * Question Service
 * Integración completa con LLM
 
@@ -181,3 +205,4 @@ Pendiente:
 Jean Alfred Gargano Alomia
 
 ---
+
