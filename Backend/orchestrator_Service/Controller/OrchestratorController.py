@@ -2,9 +2,9 @@ import logging
 
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 
-from Orchestrator_Service.Model.Schemas import DocumentUploadResponse
-from Orchestrator_Service.Security.File_Validator import validate_file
-from Orchestrator_Service.Service.IOrchestratorService import IOrchestratorService
+from orchestrator_Service.Model.Schemas import DocumentUploadResponse
+from orchestrator_Service.Security.File_Validator import validate_file
+from orchestrator_Service.Service.IOrchestratorService import IOrchestratorService
 
 logger = logging.getLogger(__name__)
 

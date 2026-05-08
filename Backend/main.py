@@ -6,26 +6,26 @@ from fastapi import FastAPI
 from Config import settings
 
 # ── Clientes de infraestructura ──────────────────────────────────────────────────────
-from Embedding_Service.Infra.Qdrant_Client import get_qdrant_client
-from Indexer_Service.Infra.Neo4j_Client import get_neo4j_driver
+from embedding_Service.Infra.Qdrant_Client import get_qdrant_client
+from indexer_Service.Infra.Neo4j_Client import get_neo4j_driver
 
 # ── Document ───────────────────────────────────────────────────────────────────
-from Document_Service.Repository.DocumentRepository import DocumentRepository
-from Document_Service.Service.DocumentService import DocumentService
+from document_Service.Repository.DocumentRepository import DocumentRepository
+from document_Service.Service.DocumentService import DocumentService
 
 # ── Embedding ─────────────────────────────────────────────────────────────────
-from Embedding_Service.Repository.EmbeddingRepository import EmbeddingRepository
-from Embedding_Service.Service.EmbeddingService import EmbeddingService
-from Embedding_Service.Infra.FastEmbedClient import FastEmbedClient
+from embedding_Service.Repository.EmbeddingRepository import EmbeddingRepository
+from embedding_Service.Service.EmbeddingService import EmbeddingService
+from embedding_Service.Infra.FastEmbedClient import FastEmbedClient
 
 # ── Indexer ───────────────────────────────────────────────────────────────────
-from Indexer_Service.Repository.GraphRepository import GraphRepository
-from Indexer_Service.Service.Indexer_Service import IndexerService
-from Indexer_Service.Infra.Spacy_Client import SpacyNERProvider
+from indexer_Service.Repository.GraphRepository import GraphRepository
+from indexer_Service.Service.Indexer_Service import IndexerService
+from indexer_Service.Infra.Spacy_Client import SpacyNERProvider
 
 # ── Orchestrator ───────────────────────────────────────────────────────────────
-from Orchestrator_Service.Controller.OrchestratorController import router as orchestrator_router
-from Orchestrator_Service.Service.OrchestratorService import OrchestratorService
+from orchestrator_Service.Controller.OrchestratorController import router as orchestrator_router
+from orchestrator_Service.Service.OrchestratorService import OrchestratorService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -6,17 +6,17 @@ from typing import List
 from fastapi import HTTPException, status
 
 from Config import settings
-from Document_Service.Model.Schemas import DocumentUploadResponse
-from Embedding_Service.Model.Schemas import IndexRequest
-from Indexer_Service.Model.Schemas import (
+from document_Service.Model.Schemas import DocumentUploadResponse
+from embedding_Service.Model.Schemas import IndexRequest
+from indexer_Service.Model.Schemas import (
     ChunkPayload as IndexerChunkPayload,
     IndexerRequest,
 )
-from Document_Service.Repository.DocumentRepository import DocumentRepository
-from Document_Service.Service.IDocumentService import IDocumentService
-from Embedding_Service.Service.IEmbeddingService import IEmbeddingService
-from Indexer_Service.Service.IIndexerService import IIndexerService
-from Document_Service.Service.Extraction_Strategies import (
+from document_Service.Repository.DocumentRepository import DocumentRepository
+from document_Service.Service.IDocumentService import IDocumentService
+from embedding_Service.Service.IEmbeddingService import IEmbeddingService
+from indexer_Service.Service.IIndexerService import IIndexerService
+from document_Service.Service.Extraction_Strategies import (
     PDFExtractionStrategy,
     DocxExtractionStrategy,
     TxtExtractionStrategy,
@@ -102,7 +102,7 @@ class DocumentService(IDocumentService):
         return file_path
 
     async def send_chunks(self, document_id: str, filename: str, chunks: list[str]) -> None:
-        embedding_task = self._embedding_service.process_chunks(
+        embedding_task = self._embedding_service.save_embeddings(
             IndexRequest(
                 document_id=document_id,
                 filename=filename,

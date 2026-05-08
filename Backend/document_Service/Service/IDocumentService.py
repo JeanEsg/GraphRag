@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Document_Service.Model.Schemas import DocumentUploadResponse
+from document_Service.Model.Schemas import DocumentUploadResponse
 
 
 class IDocumentService(ABC):

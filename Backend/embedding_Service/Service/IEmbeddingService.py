@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
-from Embedding_Service.Model.Schemas import IndexRequest, IndexResponse
+from embedding_Service.Model.Schemas import IndexRequest, IndexResponse
 
 
 class IEmbeddingService(ABC):
 
     @abstractmethod
-    async def process_chunks(self, request: IndexRequest) -> IndexResponse:
+    async def save_embeddings(self, request: IndexRequest) -> IndexResponse:
         """
         Recibe los chunks de un documento, genera sus embeddings
         y los indexa en Qdrant.

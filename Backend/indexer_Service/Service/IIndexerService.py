@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Indexer_Service.Model.Schemas import IndexerRequest, IndexerResponse
+from indexer_Service.Model.Schemas import IndexerRequest, IndexerResponse
 
 
 class IIndexerService(ABC):

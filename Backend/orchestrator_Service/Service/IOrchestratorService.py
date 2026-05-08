@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from Orchestrator_Service.Model.Schemas import DocumentUploadResponse
+from orchestrator_Service.Model.Schemas import DocumentUploadResponse
 
 
 class IOrchestratorService(ABC):

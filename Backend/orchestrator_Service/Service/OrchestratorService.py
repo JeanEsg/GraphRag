@@ -1,8 +1,8 @@
 import logging
 
-from Document_Service.Model.Schemas import DocumentUploadResponse
-from Orchestrator_Service.Service.IOrchestratorService import IOrchestratorService
-from Document_Service.Service.IDocumentService import IDocumentService
+from document_Service.Model.Schemas import DocumentUploadResponse
+from orchestrator_Service.Service.IOrchestratorService import IOrchestratorService
+from document_Service.Service.IDocumentService import IDocumentService
 logger = logging.getLogger(__name__)
 
 

@@ -1,9 +1,9 @@
 import logging
 from fastapi import HTTPException, status
-from Embedding_Service.Model.Schemas import IndexRequest, IndexResponse
-from Embedding_Service.Infra.FastEmbedClient import FastEmbedClient
-from Embedding_Service.Repository.EmbeddingRepository import EmbeddingRepository
-from Embedding_Service.Service.IEmbeddingService import IEmbeddingService
+from embedding_Service.Model.Schemas import IndexRequest, IndexResponse
+from embedding_Service.Infra.FastEmbedClient import FastEmbedClient
+from embedding_Service.Repository.EmbeddingRepository import EmbeddingRepository
+from embedding_Service.Service.IEmbeddingService import IEmbeddingService
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class EmbeddingService(IEmbeddingService):
         self._repo = embedding_repository
         self._fastembed = fastembed_client
 
-    async def process_chunks(self, request: IndexRequest) -> IndexResponse:
+    async def save_embeddings(self, request: IndexRequest) -> IndexResponse:
         logger.info(
             "Procesando documento '%s' | %d chunks recibidos",
             request.document_id,

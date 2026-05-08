@@ -1,8 +1,8 @@
 import logging
-from Indexer_Service.Model.Schemas import IndexerRequest, IndexerResponse
-from Indexer_Service.Infra.Spacy_Client import SpacyNERProvider
-from Indexer_Service.Repository.GraphRepository import GraphRepository
-from Indexer_Service.Service.IIndexerService import IIndexerService
+from indexer_Service.Model.Schemas import IndexerRequest, IndexerResponse
+from indexer_Service.Infra.Spacy_Client import SpacyNERProvider
+from indexer_Service.Repository.GraphRepository import GraphRepository
+from indexer_Service.Service.IIndexerService import IIndexerService
 
 logger = logging.getLogger(__name__)
 

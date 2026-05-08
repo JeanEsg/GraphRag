@@ -4,7 +4,7 @@ from typing import Optional
 from PyPDF2 import PdfReader
 from docx import Document as DocxDocument
 
-from Document_Service.Service.IExtraction_Strategy import IExtractionStrategy
+from document_Service.Service.IExtraction_Strategy import IExtractionStrategy
 
 logger = logging.getLogger(__name__)
 
