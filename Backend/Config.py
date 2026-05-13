@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     chunk_size: int = 512
     chunk_overlap: int = 64
 
+    # ── LLM (Groq) ────────────────────────────────────────────────────────────
+    groq_api_key: str | None = None
+
     # ── Seguridad / gateway ────────────────────────────────────────────────────
     app_env: str = "development"
     upload_dir: str = "uploads"

@@ -85,3 +85,42 @@ class GraphRepository:
                 MATCH (c:Chunk {chunk_id: $chunk_id})
                 MERGE (c)-[:MENTIONS]->(e)
             """, text=entity_text, label=entity_label, chunk_id=chunk_id)
+
+
+    def search_chunks_by_entities(self, entities: list[str], limit: int = 15) -> list[dict]:
+        """
+        Realiza una búsqueda exploratoria en el grafo:
+        1. Chunks que mencionan las entidades directamente.
+        2. Chunks vecinos (anterior/siguiente) para mantener el contexto.
+        3. Chunks de otras entidades que co-ocurren con las buscadas.
+        """
+        if not entities:
+            return []
+            
+        with self._driver.session() as session:
+            # Esta query es el "motor de exploración":
+            # Encuentra la entidad -> sus chunks -> vecinos -> otras entidades en esos chunks -> sus chunks.
+            result = session.run("""
+                MATCH (e:Entity)
+                WHERE toLower(e.text) IN [ent IN $entities | toLower(ent)]
+                
+                // Nivel 1: Chunks directos y sus vecinos inmediatos
+                MATCH (e)<-[:MENTIONS]-(c:Chunk)
+                OPTIONAL MATCH (c)-[:NEXT_CHUNK*0..1]-(neighbor:Chunk)
+                
+                // Nivel 2: Co-ocurrencia (Otras entidades en los mismos chunks)
+                OPTIONAL MATCH (neighbor)-[:MENTIONS]->(co_entity:Entity)<-[:MENTIONS]-(co_chunk:Chunk)
+                
+                WITH neighbor, co_chunk, e
+                UNWIND [neighbor, co_chunk] AS result_chunk
+                
+                RETURN DISTINCT result_chunk.chunk_id AS chunk_id, 
+                       result_chunk.text AS text, 
+                       result_chunk.document_id AS document_id, 
+                       e.text AS matched_entity
+                LIMIT $limit
+            """, entities=entities, limit=limit)
+            return [record.data() for record in result]
+
+
+

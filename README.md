@@ -192,17 +192,19 @@ Procesamiento de documentos
 Generación de embeddings
 Integración con Qdrant
 Integración con Neo4j
+Question Service (Recuperación Híbrida Vector + Grafo)
+Integración completa con LLM (Llama 3.3 vía Groq)
 
 Pendiente:
 
-* Question Service
-* Integración completa con LLM
+* Refinamiento de la ontología / NER
+* Interfaz de usuario (Frontend)
 
 ---
 
 ## Autor
 
 Jean Alfred Gargano Alomia
-
+Jean Pool Esguerra Rojas
 ---
 
