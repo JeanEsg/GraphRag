@@ -2,6 +2,7 @@ import logging
 import uuid
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
+from embedding_Service.Infra.ANNSearchHelper import ANNSearchHelper
 
 logger = logging.getLogger(__name__)
 
@@ -55,3 +56,19 @@ class EmbeddingRepository:
             points=points,
         )
         logger.info("Upsert de %d puntos", len(points))
+
+    def search_vectors(self, query_vector: list[float], limit: int = 5) -> list[dict]:
+        """
+        Realiza la búsqueda vectorial en Qdrant utilizando la configuración HNSW.
+        """
+        search_params = ANNSearchHelper.get_hnsw_search_params(ef_search=128)
+        
+        results = self._client.search(
+            collection_name=self._collection_name,
+            query_vector=query_vector,
+            limit=limit,
+            search_params=search_params,
+        )
+        
+        # Devolver solo los payloads y opcionalmente el score (similitud)
+        return [{"score": hit.score, **hit.payload} for hit in results]

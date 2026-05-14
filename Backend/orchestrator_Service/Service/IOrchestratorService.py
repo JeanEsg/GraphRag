@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from orchestrator_Service.Model.Schemas import DocumentUploadResponse
+from question_Service.Model.Schemas import QuestionRequest, QuestionResponse
 
 
 class IOrchestratorService(ABC):
@@ -12,3 +13,10 @@ class IOrchestratorService(ABC):
         Orquesta la ingesta de un documento.
         """
         pass
+
+    @abstractmethod
+    async def ask_question(self, request: QuestionRequest) -> QuestionResponse:
+        """
+        Delega la pregunta al QuestionService para recuperación híbrida.
+        """
+        pass

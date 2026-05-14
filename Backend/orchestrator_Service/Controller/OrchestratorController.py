@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 
 from orchestrator_Service.Model.Schemas import DocumentUploadResponse
+from question_Service.Model.Schemas import QuestionRequest, QuestionResponse
 from orchestrator_Service.Security.File_Validator import validate_file
 from orchestrator_Service.Service.IOrchestratorService import IOrchestratorService
 
@@ -37,3 +38,19 @@ async def upload_document(
         content_type=file.content_type,
         file_content=file_content,
     )
+
+# ── Preguntas (Hybrid Retrieval) ───────────────────────────
+
+@router.post(
+    "/orchestrator/ask",
+    response_model=QuestionResponse,
+    status_code=200,
+    summary="Preguntar al sistema",
+    description="Realiza una recuperación híbrida (Vector + Grafo) basada en la pregunta del usuario.",
+)
+async def ask_question(
+    request: QuestionRequest,
+    service: IOrchestratorService = Depends(get_orchestrator_service),
+):
+    return await service.ask_question(request)
+

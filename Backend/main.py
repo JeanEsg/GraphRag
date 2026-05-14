@@ -23,6 +23,10 @@ from indexer_Service.Repository.GraphRepository import GraphRepository
 from indexer_Service.Service.Indexer_Service import IndexerService
 from indexer_Service.Infra.Spacy_Client import SpacyNERProvider
 
+# ── Question ──────────────────────────────────────────────────────────────────
+from question_Service.Service.QuestionService import QuestionService
+from question_Service.Infra.LLMClient import LLMClient
+
 # ── Orchestrator ───────────────────────────────────────────────────────────────
 from orchestrator_Service.Controller.OrchestratorController import router as orchestrator_router
 from orchestrator_Service.Service.OrchestratorService import OrchestratorService
@@ -70,8 +74,26 @@ async def lifespan(app: FastAPI):
         indexer_service=indexer_service,
     )
 
+    # Módulo Question
+    llm_client = None
+    if settings.groq_api_key:
+        llm_client = LLMClient(api_key=settings.groq_api_key)
+    else:
+        logger.warning("No se proporcionó groq_api_key. El generador de respuestas fallará.")
+        
+    question_service = QuestionService(
+        embedding_repo=embedding_repo,
+        fastembed_client=embedding_provider,
+        graph_repo=indexer_repo,
+        spacy_client=ner_provider,
+        llm_client=llm_client,
+    )
+
     # Orchestrator (recibe los servicios por inyección)
-    orchestrator_service = OrchestratorService(document_service=document_service)
+    orchestrator_service = OrchestratorService(
+        document_service=document_service,
+        question_service=question_service,
+    )
 
     app.state.orchestrator_service = orchestrator_service
 
