@@ -36,6 +36,7 @@ class EmbeddingRepository:
         document_id: str,
         filename: str,
         chunks: list[str],
+        chunk_ids: list[str],
         vectors: list[list[float]],
     ) -> None:
         points = [
@@ -44,12 +45,13 @@ class EmbeddingRepository:
                 vector=vector,
                 payload={
                     "document_id": document_id,
+                    "chunk_id": chunk_id,
                     "filename": filename,
                     "chunk_index": i,
                     "text": chunk,
                 },
             )
-            for i, (chunk, vector) in enumerate(zip(chunks, vectors))
+            for i, (chunk, chunk_id, vector) in enumerate(zip(chunks, chunk_ids, vectors))
         ]
         self._client.upsert(
             collection_name=self._collection_name,
