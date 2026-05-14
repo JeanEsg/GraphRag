@@ -4,6 +4,8 @@ class IndexRequest(BaseModel):
     document_id: str
     filename: str
     chunks: list[str]
+    chunk_ids: list[str]
+
 
 class IndexResponse(BaseModel):
     message: str

@@ -102,21 +102,24 @@ class DocumentService(IDocumentService):
         return file_path
 
     async def send_chunks(self, document_id: str, filename: str, chunks: list[str]) -> None:
+        chunk_ids = [f"{document_id}-{index:04d}" for index in range(len(chunks))]
+
         embedding_task = self._embedding_service.save_embeddings(
             IndexRequest(
                 document_id=document_id,
                 filename=filename,
                 chunks=chunks,
+                chunk_ids=chunk_ids,
             )
         )
 
         indexer_chunks = [
             IndexerChunkPayload(
-                chunk_id=f"{document_id}-{index:04d}",
+                chunk_id=cid,
                 chunk_index=index,
                 text=chunk,
             )
-            for index, chunk in enumerate(chunks)
+            for index, (cid, chunk) in enumerate(zip(chunk_ids, chunks))
         ]
 
         indexer_task = self._indexer_service.process_chunks(
@@ -129,7 +132,7 @@ class DocumentService(IDocumentService):
         await asyncio.gather(
             embedding_task,
             indexer_task,
-    )
+        )
 
     def _chunk_content(self, content: str) -> List[str]:
         size = settings.chunk_size

@@ -32,12 +32,20 @@ class EmbeddingService(IEmbeddingService):
             )
 
         # 1. Validar que los chunks no superen el límite de tokens del modelo
-        valid_chunks = self._fastembed.validate_chunks(request.chunks)
-        if not valid_chunks:
+        valid_indices = [
+            i for i, chunk in enumerate(request.chunks)
+            if self._fastembed.count_tokens(chunk) <= self._fastembed._max_tokens
+        ]
+
+        if not valid_indices:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Todos los chunks superan el límite de tokens del modelo.",
             )
+
+        valid_chunks = [request.chunks[i] for i in valid_indices]
+        valid_ids = [request.chunk_ids[i] for i in valid_indices]
+
         logger.info(
             "%d/%d chunks válidos tras validación de tokens",
             len(valid_chunks),
@@ -53,6 +61,7 @@ class EmbeddingService(IEmbeddingService):
             document_id=request.document_id,
             filename=request.filename,
             chunks=valid_chunks,
+            chunk_ids=valid_ids,
             vectors=vectors,
         )
 
